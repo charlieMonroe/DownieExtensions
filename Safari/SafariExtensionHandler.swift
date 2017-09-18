@@ -11,15 +11,30 @@ import os
 
 class SafariExtensionHandler: SFSafariExtensionHandler {
 	
-	private func _open(_ url: String) {
-		guard let openURL = URL(string: "downie://XUOpenLink?url=" + url) else {
+	var _sharedPreferences: UserDefaults {
+		return UserDefaults(suiteName: "D43XN356JM.com.charliemonroe.Downie.Safari")!
+	}
+	
+	private func _open(_ url: String, postprocessingOption: String? = nil) {
+		guard let urlString = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
 			return
 		}
 		
-		NSWorkspace.shared().open(openURL)
+		var deepLinkURLString = "downie://XUOpenLink?url=" + urlString
+		if let postprocessing = postprocessingOption {
+			deepLinkURLString += "&postprocessing=" + postprocessing
+		}
+		
+		guard let openURL = URL(string: deepLinkURLString) else {
+			return
+		}
+		
+		let withoutActivation = _sharedPreferences.bool(forKey: "XUSafariSendLinksWithoutActivation")
+		let options: NSWorkspace.LaunchOptions = withoutActivation ? .withoutActivation : []
+		_ = try? NSWorkspace.shared.open(openURL, options: options, configuration: [:])
 	}
 	
-	private func _openURL(in page: SFSafariPage) {
+	private func _openURL(in page: SFSafariPage, postprocessingOption: String? = nil) {
 		page.getPropertiesWithCompletionHandler({ (propertiesOpt) in
 			guard let properties = propertiesOpt else {
 				print("Failed to get page properties in \(page.description)")
@@ -31,7 +46,7 @@ class SafariExtensionHandler: SFSafariExtensionHandler {
 			guard let url = properties.url else {
 				return
 			}
-			self._open(url.absoluteString)
+			self._open(url.absoluteString, postprocessingOption: postprocessingOption)
 		})
 	}
 	
@@ -42,11 +57,28 @@ class SafariExtensionHandler: SFSafariExtensionHandler {
 	}
 	
 	override func contextMenuItemSelected(withCommand command: String, in page: SFSafariPage, userInfo: [String : Any]? = nil) {
-		guard let urlString = userInfo?["selectedLink"] as? String else {
+		if command == "SendSelectedLink" {
+			guard let urlString = userInfo?["selectedLink"] as? String else {
+				return
+			}
+			
+			self._open(urlString)
 			return
 		}
 		
-		self._open(urlString)
+		let postprocessingOption: String
+		switch command {
+		case "SendMP4":
+			postprocessingOption = "mp4"
+		case "SendAudio":
+			postprocessingOption = "audio"
+		case "SendPermute":
+			postprocessingOption = "permute"
+		default:
+			return
+		}
+	
+		self._openURL(in: page, postprocessingOption: postprocessingOption)
 	}
 	
     override func toolbarItemClicked(in window: SFSafariWindow) {
@@ -74,8 +106,34 @@ class SafariExtensionHandler: SFSafariExtensionHandler {
     }
 	
 	override func validateContextMenuItem(withCommand command: String, in page: SFSafariPage, userInfo: [String : Any]? = nil, validationHandler: @escaping (Bool, String?) -> Void) {
-		print(userInfo ?? "nil")
-		validationHandler(userInfo?["selectedLink"] == nil, nil)
+		if command == "SendSelectedLink" {
+			validationHandler(userInfo?["selectedLink"] == nil, nil)
+		} else {
+			// Sending current link, but with certain postprocessing.
+			if _sharedPreferences.bool(forKey: "XUSafariHidePostprocessingContextualMenuOptions") {
+				validationHandler(true, nil)
+				return
+			}
+			
+			page.getPropertiesWithCompletionHandler({ (properties) in
+				guard let properties = properties else {
+					validationHandler(true, nil)
+					return
+				}
+				
+				guard let url = properties.url else {
+					validationHandler(true, nil)
+					return
+				}
+				
+				guard url.scheme == "http" || url.scheme == "https" else {
+					validationHandler(true, nil)
+					return
+				}
+				
+				validationHandler(false, nil)
+			})
+		}
 	}
     
     override func validateToolbarItem(in window: SFSafariWindow, validationHandler: @escaping ((Bool, String) -> Void)) {

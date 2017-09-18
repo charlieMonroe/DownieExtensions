@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.8</string>
+	<string>1.1.6</string>
 	<key>CFBundleVersion</key>
-	<string>29</string>
+	<string>40</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSExtension</key>
@@ -39,9 +39,27 @@
 		<array>
 			<dict>
 				<key>Command</key>
-				<string>Command</string>
+				<string>SendSelectedLink</string>
 				<key>Text</key>
 				<string>Send Link to Downie</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>SendMP4</string>
+				<key>Text</key>
+				<string>Send Current Link to Downie [MP4]</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>SendAudio</string>
+				<key>Text</key>
+				<string>Send Current Link to Downie [Audio]</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>SendPermute</string>
+				<key>Text</key>
+				<string>Send Current Link to Downie [Permute]</string>
 			</dict>
 		</array>
 		<key>SFSafariToolbarItem</key>
@@ -62,8 +80,12 @@
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2016 Charlie Monroe Software. All rights reserved.</string>
+	<string>Copyright © 2016-17 Charlie Monroe Software. All rights reserved.</string>
 	<key>NSHumanReadableDescription</key>
 	<string>Send current link to Downie.</string>
+	<key>SFSafariExtensionBundleIdentifiersToUninstall</key>
+	<array>
+		<string>com.charliemonroe.safari.downie</string>
+	</array>
 </dict>
 </plist>
