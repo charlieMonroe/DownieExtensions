@@ -1,7 +1,8 @@
-// Copyright (c) 2014-17 Charlie Monroe Software. All rights reserved.
+// Copyright (c) 2014-19 Charlie Monroe Software. All rights reserved.
 
 function openLinkInDownie(url, postprocessing, tab){
 	var action_url = "downie://XUOpenLink?url=" + encodeURI(url);
+	action_url = action_url.replace("&", "%26");
 	if (postprocessing != null) {
 		action_url = action_url + "&postprocessing=" + postprocessing;
 	}
@@ -47,6 +48,17 @@ chrome.contextMenus.create({
 chrome.browserAction.onClicked.addListener(function(tab) {
 	openLinkInDownie(tab.url, null, tab);
 });
+
+const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+if (isDark) {
+	var darkModeIcons = {
+		16: "downie_16x16_white.png"
+	};
+	
+	chrome.browserAction.setIcon({
+		path: darkModeIcons
+	});
+}
 
 chrome.commands.onCommand.addListener(function(command) {
 	var postprocessing = null;

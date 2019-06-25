@@ -16,16 +16,18 @@ class SafariExtensionHandler: SFSafariExtensionHandler {
 	}
 	
 	private func _open(_ url: String, postprocessingOption: String? = nil) {
-		guard let urlString = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-			return
-		}
+		var components = URLComponents()
+		components.scheme = "downie"
+		components.host = "XUOpenLink"
+//		components.path = "/"
 		
-		var deepLinkURLString = "downie://XUOpenLink?url=" + urlString
+		var queryItems: [URLQueryItem] = [URLQueryItem(name: "url", value: url), URLQueryItem(name: "version", value: "1.2")]
 		if let postprocessing = postprocessingOption {
-			deepLinkURLString += "&postprocessing=" + postprocessing
+			queryItems.append(URLQueryItem(name: "postprocessing", value: postprocessing))
 		}
+		components.queryItems = queryItems
 		
-		guard let openURL = URL(string: deepLinkURLString) else {
+		guard let openURL = components.url else {
 			return
 		}
 		

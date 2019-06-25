@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.6</string>
+	<string>1.2</string>
 	<key>CFBundleVersion</key>
-	<string>40</string>
+	<string>45</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSExtension</key>
@@ -80,7 +80,7 @@
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2016-17 Charlie Monroe Software. All rights reserved.</string>
+	<string>Copyright © 2016-19 Charlie Monroe Software. All rights reserved.</string>
 	<key>NSHumanReadableDescription</key>
 	<string>Send current link to Downie.</string>
 	<key>SFSafariExtensionBundleIdentifiersToUninstall</key>

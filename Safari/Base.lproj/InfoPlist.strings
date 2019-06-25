@@ -1,0 +1,14 @@
+/* 
+  InfoPlist.strings
+  Downie
+
+  Created by Charlie Monroe on 4/4/18.
+  Copyright © 2018 Charlie Monroe Software. All rights reserved.
+*/
+
+"Context Menu Item Label for Command: SendSelectedLink" = "Send Link to Downie";
+"Context Menu Item Label for Command: SendMP4" = "Send Current Link to Downie [MP4]";
+"Context Menu Item Label for Command: SendAudio" = "Send Current Link to Downie [Audio]";
+"Context Menu Item Label for Command: SendPermute" = "Send Current Link to Downie [Permute]";
+
+"Toolbar Button Label for Identifier: com.charliemonroe.Downie.ToolbarButton" = "Send to Downie";
