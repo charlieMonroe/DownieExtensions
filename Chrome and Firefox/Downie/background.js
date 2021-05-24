@@ -3,6 +3,7 @@
 function openLinkInDownie(url, postprocessing, tab){
 	var action_url = "downie://XUOpenLink?url=" + encodeURI(url);
 	action_url = action_url.replace("&", "%26");
+	action_url = action_url.replace("#", "%23");
 	if (postprocessing != null) {
 		action_url = action_url + "&postprocessing=" + postprocessing;
 	}
