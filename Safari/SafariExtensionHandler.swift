@@ -10,11 +10,7 @@ import SafariServices
 import os
 
 class SafariExtensionHandler: SFSafariExtensionHandler {
-	
-	var _sharedPreferences: UserDefaults {
-		return UserDefaults(suiteName: "D43XN356JM.com.charliemonroe.Downie.Safari")!
-	}
-	
+		
 	private func _open(_ url: String, postprocessingOption: String? = nil) {
 		var components = URLComponents()
 		components.scheme = "downie"
@@ -31,7 +27,7 @@ class SafariExtensionHandler: SFSafariExtensionHandler {
 			return
 		}
 		
-		let withoutActivation = _sharedPreferences.bool(forKey: "XUSafariSendLinksWithoutActivation")
+		let withoutActivation = SafariPreferences.readValue(for: SafariPreferences.Keys.sendLinksWithoutActivation)
 		let options: NSWorkspace.LaunchOptions = withoutActivation ? .withoutActivation : []
 		_ = try? NSWorkspace.shared.open(openURL, options: options, configuration: [:])
 	}
@@ -55,6 +51,24 @@ class SafariExtensionHandler: SFSafariExtensionHandler {
 	override func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]? = nil) {
 		if messageName == "XUOpenCurrentSite" {
 			self._openURL(in: page)
+		} else if messageName == "XUOpenAllSites" {
+			page.getContainingTab { tab in
+				tab.getContainingWindow { window in
+					guard let window = window else {
+						return
+					}
+					
+					window.getAllTabs { tabs in
+						for tab in tabs {
+							tab.getActivePage { page in
+								page.flatMap {
+									self._openURL(in: $0, postprocessingOption: nil)
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	
@@ -112,7 +126,7 @@ class SafariExtensionHandler: SFSafariExtensionHandler {
 			validationHandler(userInfo?["selectedLink"] == nil, nil)
 		} else {
 			// Sending current link, but with certain postprocessing.
-			if _sharedPreferences.bool(forKey: "XUSafariHidePostprocessingContextualMenuOptions") {
+			if SafariPreferences.readValue(for: SafariPreferences.Keys.hidePostprocessingContextualMenuOptions) {
 				validationHandler(true, nil)
 				return
 			}

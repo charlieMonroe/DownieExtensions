@@ -13,53 +13,65 @@ function openLinkInDownie(url, postprocessing, tab){
 	});
 };
 
-chrome.contextMenus.create({
-	"title" : "Open link in Downie",
-	"contexts" : [ "link" ],
-	"onclick" : function(info, tab){
-		openLinkInDownie(info.linkUrl, null, tab);
+chrome.runtime.onInstalled.addListener(() => {
+	chrome.contextMenus.create({
+		"id": 'open-in-downie',
+		"title" : "Open link in Downie",
+		"contexts" : ["link"]
+	});
+	
+	chrome.contextMenus.create({
+		"id": 'open-in-downie-mp4',
+		"title" : "Open Current Link in Downie [MP4]",
+		"contexts" : ["page"]
+	});
+	
+	chrome.contextMenus.create({
+		"id": 'open-in-downie-audio',
+		"title" : "Open Current Link in Downie [Audio]",
+		"contexts" : ["page"]
+	});
+	
+	chrome.contextMenus.create({
+		"id": 'open-in-downie-permute',
+		"title" : "Open Current Link in Downie [Permute]",
+		"contexts" : ["page"]
+	});
+	
+	
+	const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+	if (isDark) {
+		var darkModeIcons = {
+			16: "downie_16x16_white.png"
+		};
+		
+		chrome.action.setIcon({
+			path: darkModeIcons
+		});
 	}
+	
 });
 
-chrome.contextMenus.create({
-	"title" : "Open Current Link in Downie [MP4]",
-	"contexts" : ["page"],
-	"onclick" : function(info, tab){
-		openLinkInDownie(info.pageUrl, "mp4", tab);
-	}
-});
-
-chrome.contextMenus.create({
-	"title" : "Open Current Link in Downie [MP3]",
-	"contexts" : ["page"],
-	"onclick" : function(info, tab){
-		openLinkInDownie(info.pageUrl, "mp3", tab);
-	}
-});
-
-chrome.contextMenus.create({
-	"title" : "Open Current Link in Downie [Permute]",
-	"contexts" : ["page"],
-	"onclick" : function(info, tab){
-		openLinkInDownie(info.pageUrl, "permute", tab);
-	}
-});
+try {
+	chrome.contextMenus.onClicked.addListener( (info, tab) => {
+		if (info.menuItemId === "open-in-downie") {
+			openLinkInDownie(info.linkUrl, null, tab);
+		} else if (info.menuItemId === "open-in-downie-mp4") {
+			openLinkInDownie(info.pageUrl, "mp4", tab);
+		} else if (info.menuItemId === "open-in-downie-audio") {
+			openLinkInDownie(info.pageUrl, "audio", tab);
+		} else if (info.menuItemId === "open-in-downie-permute") {
+			openLinkInDownie(info.pageUrl, "permute", tab);
+		}
+	});
+} catch (e) {
+	console.error(e);
+}
 
 // Called when the user clicks on the browser action.
-chrome.browserAction.onClicked.addListener(function(tab) {
+chrome.action.onClicked.addListener(function(tab) {
 	openLinkInDownie(tab.url, null, tab);
 });
-
-const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-if (isDark) {
-	var darkModeIcons = {
-		16: "downie_16x16_white.png"
-	};
-	
-	chrome.browserAction.setIcon({
-		path: darkModeIcons
-	});
-}
 
 chrome.commands.onCommand.addListener(function(command) {
 	var postprocessing = null;
