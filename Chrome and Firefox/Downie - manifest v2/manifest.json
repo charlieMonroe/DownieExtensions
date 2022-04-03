@@ -1,0 +1,41 @@
+{
+  "background" : {
+    "scripts" : [
+      "background.js"
+    ]
+  },
+  "browser_action" : {
+    "default_icon" : "downie_16x16.png",
+    "default_title" : "Open With Downie",
+    "theme_icons" : [
+      {
+        "dark" : "downie_16x16_white.png",
+        "light" : "downie_16x16.png",
+        "size" : 32
+      }
+    ]
+  },
+  "commands" : {
+    "XUOpenCurrentSite" : {
+      "description" : "Open current site with Downie.",
+      "suggested_key" : {
+        "default" : "MacCtrl+Shift+D"
+      }
+    }
+  },
+  "description" : "Sends current page to Downie.",
+  "icons" : {
+    "128" : "icon128.png",
+    "16" : "icon16.png",
+    "48" : "icon48.png"
+  },
+  "manifest_version" : 2,
+  "name" : "Downie",
+  "permissions" : [
+    "contextMenus",
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "version" : "1.2.5"
+}
