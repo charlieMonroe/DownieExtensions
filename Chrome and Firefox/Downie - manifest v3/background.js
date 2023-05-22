@@ -38,18 +38,6 @@ chrome.runtime.onInstalled.addListener(() => {
 		"contexts" : ["page"]
 	});
 	
-	
-	const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-	if (isDark) {
-		var darkModeIcons = {
-			16: "downie_16x16_white.png"
-		};
-		
-		chrome.action.setIcon({
-			path: darkModeIcons
-		});
-	}
-	
 });
 
 try {
