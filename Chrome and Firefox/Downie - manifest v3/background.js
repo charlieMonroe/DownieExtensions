@@ -1,6 +1,6 @@
 // Copyright (c) 2014-19 Charlie Monroe Software. All rights reserved.
 
-function openLinkInDownie(url, postprocessing, tab){
+async function openLinkInDownie(url, postprocessing, tab){
 	var action_url = "downie://XUOpenLink?url=" + encodeURI(url);
 	action_url = action_url.replaceAll("&", "%26");
 	action_url = action_url.replaceAll("#", "%23");
@@ -8,9 +8,12 @@ function openLinkInDownie(url, postprocessing, tab){
 		action_url = action_url + "&postprocessing=" + postprocessing;
 	}
 	
-	chrome.tabs.update(tab.id, {
-		url: action_url
-	});
+	await chrome.tabs.update(tab.id, { url: action_url });
+	
+	const closeAfter = await chrome.storage.sync.get("closeAfterSend");
+	if (closeAfter) {
+		await chrome.tabs.remove(tab.id);
+	}
 };
 
 chrome.runtime.onInstalled.addListener(() => {

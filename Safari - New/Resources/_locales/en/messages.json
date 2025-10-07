@@ -1,0 +1,34 @@
+{
+    "extension_name": {
+        "message": "Downie (New)",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Extension for Downie, allowing you to send links to Downie with a single click.",
+        "description": "Description of what the extension does."
+    },
+	"open_with_downie": {
+		"message": "Open With Downie",
+		"description": "Toolbar button title."
+	},
+	"open_link": {
+		"message": "Open Link in Downie",
+		"description": "Opens right-clicked link in Downie."
+	},
+	"open_current_link": {
+		"message": "Open Current Link in Downie",
+		"description": "Opens current link in Downie."
+	},
+	"open_current_link_mp4": {
+		"message": "Open Current Link in Downie [MP4]",
+		"description": "Opens current link in Downie with MP4 postprocessing."
+	},
+	"open_current_link_audio": {
+		"message": "Open Current Link in Downie [Audio]",
+		"description": "Opens current link in Downie with audio postprocessing."
+	},
+	"open_current_link_permute": {
+		"message": "Open Current Link in Downie [Permute]",
+		"description": "Opens current link in Downie with Permute postprocessing."
+	}
+}
