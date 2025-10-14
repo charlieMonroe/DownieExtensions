@@ -10,8 +10,8 @@ async function openLinkInDownie(url, postprocessing, tab){
 	
 	await chrome.tabs.update(tab.id, { url: action_url });
 	
-	const closeAfter = await chrome.storage.sync.get("closeAfterSend");
-	if (closeAfter) {
+	const settings = await chrome.storage.sync.get("closeAfterSend");
+	if (settings.closeAfterSend) {
 		await chrome.tabs.remove(tab.id);
 	}
 };
