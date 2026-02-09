@@ -1,6 +1,10 @@
-// Copyright (c) 2014-19 Charlie Monroe Software. All rights reserved.
+// Copyright (c) 2014-26 Charlie Monroe Software. All rights reserved.
 
-async function openLinkInDownie(url, postprocessing, tab){
+function timeout(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+async function openLinkInDownie(url, postprocessing, tab) {
 	var action_url = "downie://XUOpenLink?url=" + encodeURI(url);
 	action_url = action_url.replaceAll("&", "%26");
 	action_url = action_url.replaceAll("#", "%23");
@@ -12,6 +16,7 @@ async function openLinkInDownie(url, postprocessing, tab){
 	
 	const settings = await chrome.storage.sync.get("closeAfterSend");
 	if (settings.closeAfterSend) {
+		await timeout(500);
 		await chrome.tabs.remove(tab.id);
 	}
 };
